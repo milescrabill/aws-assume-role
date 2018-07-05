@@ -19,6 +19,7 @@ _aws-assume-role-reset-env() {
     unset AWS_SECRET_ACCESS_KEY
     unset AWS_SESSION_TOKEN
     unset AWS_SECURITY_TOKEN
+    unset AWS_ACCOUNT_NICKNAME
 }
 
 _aws-assume-role-activate-base-creds() {
@@ -115,6 +116,7 @@ aws-assume-role() {
     unset AWS_ACCOUNT_ROLE
     unset AWS_DEFAULT_REGION
     unset AWS_REGION
+    unset AWS_ACCOUNT_NICKNAME
 
     _aws-assume-role-reuse-session
 
@@ -140,6 +142,7 @@ aws-assume-role() {
     export AWS_SECRET_ACCESS_KEY=$secret_key
     export AWS_SECURITY_TOKEN=$session_token
     export AWS_SESSION_TOKEN=$session_token
+    export AWS_ACCOUNT_NICKNAME=$accountname
 
     local sts_account_id=$(aws sts get-caller-identity --output text --query Account)
     if [[ $accountid != $sts_account_id ]]; then
@@ -210,7 +213,7 @@ function prompt-aws-account-info {
 }
 
 if [[ -n "$ZSH_NAME" ]]; then
-    PROMPT="$PROMPT\$(prompt-aws-account-info)"
+    #PROMPT="$PROMPT\$(prompt-aws-account-info)"
     compdef _aws-assume-role aws-assume-role
 elif [[ -n "$BASH" ]]; then
     complete -F _aws-assume-role-bash aws-assume-role
